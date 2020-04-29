@@ -12,15 +12,17 @@ import (
 )
 
 func main() {
-	rootCert := mustLoadCert("./crt/root.crt")
+	rootCert := mustLoadCert("./crt/server.crt")
 	fmt.Println(rootCert.Subject.CommonName)
 
-	rootKey := mustLoadKey("./crt/root.key")
+	rootKey := mustLoadKey("./crt/server.key")
 	fmt.Println(rootKey.Size())
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
-		"foo": "bar",
-		"nbf": time.Now().Unix(),
+		"foo":  "bar",
+		"nbf":  time.Now().Unix(),
+		"exp":  time.Now().Add(2 * time.Hour).Unix(),
+		"role": []string{"reader", "writer"},
 	})
 
 	tokenString, err := token.SignedString(rootKey)
@@ -40,7 +42,7 @@ func main() {
 	}
 
 	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
-		fmt.Println(claims["foo"], claims["nbf"])
+		fmt.Println(claims)
 	} else {
 		fmt.Println("wups")
 	}
