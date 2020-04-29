@@ -6,6 +6,9 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func main() {
@@ -14,6 +17,33 @@ func main() {
 
 	rootKey := mustLoadKey("./crt/root.key")
 	fmt.Println(rootKey.Size())
+
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
+		"foo": "bar",
+		"nbf": time.Now().Unix(),
+	})
+
+	tokenString, err := token.SignedString(rootKey)
+	if err != nil {
+		panic(err)
+	}
+
+	parsed, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return rootCert.PublicKey, nil
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
+		fmt.Println(claims["foo"], claims["nbf"])
+	} else {
+		fmt.Println("wups")
+	}
 }
 
 func mustLoadCert(f string) *x509.Certificate {
