@@ -4,5 +4,6 @@ Quick proof of concept to use generated certs to sign and validate jwts in go.
 
 ```
 $ go run ./main.go 
-claims:  map[exp:1.588191286e+09 foo:bar nbf:1.588184086e+09 role:[reader writer]]
+token:  eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODgxOTU3MzMsIm5iZiI6MTU4ODE4ODUzMywicm9sZSI6WyJyZWFkZXIiLCJ3cml0ZXIiXSwidXVpZCI6IjEyMzQ1Njc4LTEyMzQtNTY3OC0xMjM0LTU2NzgxMjM0NTY3OCJ9.ZfYS8yV8dylIXyk2vBVxhdNiNtEALvJ_NJLdOvLUyhZTfqnbMhcQC1kawbyHPMRYbKgY0EE0UqOAf413HBKrEAbUv_iMj8d7ZnTsXmrkOdaPcOuDbKIA983Oy3uVlID6h-6WBvMb5bkgECJUIWqom2Qjr8fBSzA3tJnSeKyUPuERhlEO6l4lGp2g0hoIIPGUT-Sktu_yvwOFvCbGcjM3OsaUwLj5TSJWJ6QS4ZXacl-FEJjQcP0wEmbTCr1241pRYX1NIea3XCFKJT4okQhLfiguAKeJBhfifLLHEK2Y6sbFxK8lP8hpB4kSvVXiyIcPRi07aJ7Kvucd8iCUesHRPA
+claims:  map[exp:1.588195733e+09 nbf:1.588188533e+09 role:[reader writer] uuid:12345678-1234-5678-1234-567812345678]
 ```

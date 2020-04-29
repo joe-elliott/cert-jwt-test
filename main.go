@@ -16,10 +16,10 @@ func main() {
 	key := mustLoadKey("./crt/server.key")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
-		"foo":  "bar",
 		"nbf":  time.Now().Unix(),
 		"exp":  time.Now().Add(2 * time.Hour).Unix(),
 		"role": []string{"reader", "writer"},
+		"uuid": "12345678-1234-5678-1234-567812345678",
 	})
 
 	tokenString, err := token.SignedString(key)
@@ -39,6 +39,7 @@ func main() {
 	}
 
 	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
+		fmt.Println("token: ", tokenString)
 		fmt.Println("claims: ", claims)
 	} else {
 		fmt.Println("wups")
