@@ -12,11 +12,8 @@ import (
 )
 
 func main() {
-	rootCert := mustLoadCert("./crt/server.crt")
-	fmt.Println(rootCert.Subject.CommonName)
-
-	rootKey := mustLoadKey("./crt/server.key")
-	fmt.Println(rootKey.Size())
+	crt := mustLoadCert("./crt/server.crt")
+	key := mustLoadKey("./crt/server.key")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"foo":  "bar",
@@ -25,7 +22,7 @@ func main() {
 		"role": []string{"reader", "writer"},
 	})
 
-	tokenString, err := token.SignedString(rootKey)
+	tokenString, err := token.SignedString(key)
 	if err != nil {
 		panic(err)
 	}
@@ -35,14 +32,14 @@ func main() {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return rootCert.PublicKey, nil
+		return crt.PublicKey, nil
 	})
 	if err != nil {
 		panic(err)
 	}
 
 	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
-		fmt.Println(claims)
+		fmt.Println("claims: ", claims)
 	} else {
 		fmt.Println("wups")
 	}
